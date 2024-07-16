@@ -37,7 +37,6 @@ def main():
     
     true_labels = load_true_labels(label_file)
     true_labels_dict = {time: label for time, label in true_labels}
-    print(f"Loaded true labels: {true_labels}")
     predicted_labels = []
     all_times = []
 
@@ -70,11 +69,11 @@ def main():
                 
     aligned_true_labels = [true_labels_dict.get(time, 0) for time in all_times]
 
-    #calculate TN, FP, FN, TP and confusion matrix
+    #Calculating confusion matrix and getting TN, FP, FP, TP
     cm = confusion_matrix(aligned_true_labels, predicted_labels)
     TN, FP, FN, TP = cm.ravel()
 
-    # # F1 Score formula
+    #F1 Score formula
     precision = TP / (TP + FP) if (TP + FP) != 0 else 0
     recall = TP / (FN + TP) if (FN + TP) != 0 else 0
     f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) != 0 else 0
