@@ -100,8 +100,5 @@ def main():
     auc = roc_auc_score(aligned_true_labels, predicted_labels)
     print(f'AUC: {auc}')
 
-    for time, true_label, pred_label in zip(all_times, aligned_true_labels, predicted_labels):
-        print(f"Time: {time}, True Label: {true_label}, Predicted Label: {pred_label}")
-
 if __name__ == '__main__':
     main()
