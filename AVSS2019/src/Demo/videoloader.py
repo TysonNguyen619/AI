@@ -18,16 +18,17 @@ class VideoLoader:
     def get_frames(self, n_frames=16, sample_rate=1):
         # todo more effecient
         frames = []
+        original_frames = []
         for i in range(n_frames * sample_rate):
             ret, frame = self.cap.read()
             if not ret:
-                return None
+                return None, None
             if i % sample_rate == 0:
+                original_frames.append(frame.copy())
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 frames.append(frame)
         self.pos = self.cap.get(cv2.CAP_PROP_POS_FRAMES)
-        # print(f"Frame position after read: {self.pos}")  # Debugging print
-        return np.array(frames)
+        return np.array(frames), original_frames
 
     def __del__(self):
         self.cap.release()
@@ -75,6 +76,8 @@ def frames_to_tensor(frames):
     clip = [transform(frame) for frame in clip]
     return torch.stack(clip).permute(1, 0, 2, 3)
 
+def draw_red_border(frame, thickness=5):
+    return cv2.copyMakeBorder(frame, thickness, thickness, thickness, thickness, cv2.BORDER_CONSTANT, value=(0, 0, 255))
 
 if __name__ == '__main__':
 
@@ -86,12 +89,12 @@ if __name__ == '__main__':
     vl = VideoLoader('video.mp4')
 
     batch = []
-    frames = vl.get_frames()
+    frames, _ = vl.get_frames()
     x = frames_to_tensor(frames)
     batch.append(x)
 
     # next 16 frames
-    frames = vl.get_frames()
+    frames, _ = vl.get_frames()
     x = frames_to_tensor(frames)
     batch.append(x)
 
