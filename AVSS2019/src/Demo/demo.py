@@ -70,7 +70,6 @@ def main():
                 print('violent scene at time:\n%d:%d:%d' % (h, m, s))
                 frame = draw_red_border(original_frames[i])
                 output_path = os.path.join(output_dir, f'frame_{int(h)}_{int(m)}_{int(s)}_{frame_index:04d}.jpg')
-                print(f"Saving frame to {output_path}")
                 cv2.imwrite(output_path, frame)
                 predicted_labels.append(1)
             else:
