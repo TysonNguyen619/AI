@@ -64,13 +64,19 @@ def main():
             full_timestamp = f"{current_date} {int(h):02}:{int(m):02}:{int(s):02}-{frame_index:03d}"
             all_times.append(f"{int(h)}:{int(m)}:{int(s)}")
 
-            # Check against ground truth and print result
+            # Get the ground truth label
             ground_truth_label = true_labels_dict.get(f"{int(h)}:{int(m)}:{int(s)}", 0)
-            ground_truth_text = "violent" if ground_truth_label == 1 else "normal"
-            print(f"Processing time: {duration_str}, Ground Truth: {ground_truth_text}, Prediction: {'violent' if pred_label == 1 else 'normal'}")
+            label_text = "violent" if ground_truth_label == 1 else "normal"
 
+            # Print according to the specified format
+            print(f"Processing time: {duration_str}, Label: {label_text}")
+
+            # If the ground truth label is violent, add an additional line
             if ground_truth_label == 1:
+                print(f"Violent scene at {duration_str}")
                 frame = draw_red_border(original_frames[i])
+
+                # Overlay text for violent frames
                 text = "Violent Scene Detected"
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 font_scale = 1
@@ -80,22 +86,24 @@ def main():
                 text_x = (frame.shape[1] - text_size[0]) // 2
                 text_y = 50
                 cv2.putText(frame, text, (text_x, text_y), font, font_scale, font_color, thickness)
-                
+
                 output_path = os.path.join(output_dir, f'frame_{int(h)}_{int(m)}_{int(s)}_{frame_index:04d}.jpg')
                 cv2.imwrite(output_path, frame)
                 predicted_labels.append(1)
             else:
                 frame = original_frames[i]
                 predicted_labels.append(0)
-            
+
+            # Display the frame
             cv2.imshow('Violence Detection', frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
 
+            # Add frame details to JSON output
             json_output["frames"].append({
                 "frame": frame_index,
                 "timestamp": full_timestamp,
-                "label": ground_truth_text,
+                "label": label_text,
             })
 
             frame_index += 1
