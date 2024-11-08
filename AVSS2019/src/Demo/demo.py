@@ -76,7 +76,7 @@ def main():
                 frame = draw_red_border(original_frames[i])
 
                 # Add red text at the top center of the frame
-                text = "Violent Scene Detected"
+                text = "Violent Scene Detected"ghroweqhgoi;weqoghwei;ghoweioweio;gfweiofh;
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 font_scale = 1
                 font_color = (0, 255, 255)  # Red color
